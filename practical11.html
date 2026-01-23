@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Odd and Even Row Styling</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        table {
+            width: 70%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-family: Arial;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .odd-row {
+            background-color: #e8f5e9; /* Light Green */
+        }
+        .even-row {
+            background-color: #fce4ec; /* Light Pink */
+        }
+    </style>
+</head>
+
+<body ng-controller="tableCtrl">
+
+    <h2 style="text-align:center;">Employee Data (Odd/Even Row Styling)</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Salary</th>
+        </tr>
+
+        <tr ng-repeat="emp in employees"
+            ng-class-odd="'odd-row'"
+            ng-class-even="'even-row'">
+            <td>{{emp.id}}</td>
+            <td>{{emp.name}}</td>
+            <td>{{emp.dept}}</td>
+            <td>{{emp.Salary}}</td>
+        </tr>
+    </table>
+
+    <script>
+        var app = angular.module("myApp", []);
+        app.controller("tableCtrl", function($scope) {
+            $scope.employees = [
+                {id: 1, name: "Amit", dept: "HR",Salary:15000},
+                {id: 2, name: "Riya", dept: "IT",Salary:45000},
+                {id: 3, name: "Kunal", dept: "Finance",Salary:16000},
+                {id: 4, name: "Sneha", dept: "Accounts",Salary:20000},
+                {id: 5, name: "Rohan", dept: "Sales",Salary:16000},
+                {id: 6, name: "Neha", dept: "IT",Salary:45000},
+                {id: 7, name: "Pooja", dept: "HR",Salary:15000},
+                {id: 8, name: "Ajay", dept: "Admin",Salary:12000 },
+                {id: 9, name: "Vinay", dept: "Support",Salary:10000},
+                {id: 10, name: "Meera", dept: "Marketing",Salary:22000}
+            ];
+        });
+    </script>
+
+</body>
+</html>

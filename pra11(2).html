@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Odd and Even Row Styling</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        table {
+            width: 70%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-family: Arial;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .odd-row {
+            background-color: #b999c7; /* Light Green */
+        }
+        .even-row {
+            background-color: #a7e996; /* Light Pink */
+        }
+    </style>
+</head>
+
+<body ng-controller="tableCtrl">
+
+    <h2 style="text-align:center;">Employee Data (Odd/Even Row Styling)</h2>
+
+    <table>
+        <tr>
+            <th>Roll_no</th>
+            <th>Name</th>
+            <th>Class</th>
+        </tr>
+
+        <tr ng-repeat="emp in employees"
+            ng-class-odd="'odd-row'"
+            ng-class-even="'even-row'">
+            <td>{{emp.id}}</td>
+            <td>{{emp.name}}</td>
+            <td>{{emp.dept }}</td>
+        </tr>
+    </table>
+
+    <script>
+        var app = angular.module("myApp", []);
+        app.controller("tableCtrl", function($scope) {
+            $scope.employees = [
+                {id: 11, name: "Nikita",dept: "IT"},
+                {id: 20, name: "Samruddhi",dept: "computer"},
+                {id: 34, name: "omkar",dept: "civil"},
+                {id: 47, name: "Shruti", dept: "mechanical"},
+                {id: 53, name: "Bijendra", dept: "Electrical"},
+                {id: 6, name: "Asawari", dept: "IT"},
+                {id: 7, name: "pranjal",dept: "computer"},
+                {id: 80, name: "Gaurav", dept: "IT"},
+                {id: 99, name: "Vinay", dept: "Electrical"},
+                {id: 10, name: "pooja", dept: "civil"}
+            ];
+        });
+    </script>
+
+</body>
+</html>
