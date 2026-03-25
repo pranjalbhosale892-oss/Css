@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Popup Advertisement UI - Final Microproject</title>
+
+<style>
+/* ===============================
+   GLOBAL DESIGN
+================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(to right, #eef2f3, #dfe9f3);
+    min-height: 200vh; /* For scroll testing */
+}
+
+body.popup-active {
+    overflow: hidden;
+}
+
+/* ===============================
+   TRIGGER BUTTON
+================================ */
+.trigger-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.trigger-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.trigger-btn:hover {
+    opacity: 0.9;
+}
+
+/* ===============================
+   OVERLAY (6.1.2)
+================================ */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+/* ===============================
+   POPUP BOX (6.1.1)
+================================ */
+.popup {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    padding: 25px 20px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    animation: popupAnimation 0.35s ease-out;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+/* 6.2.1 Attractive Animation */
+@keyframes popupAnimation {
+    0% { opacity: 0; transform: translateY(-30px) scale(0.85); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popup h3 {
+    margin-bottom: 10px;
+    font-size: 22px;
+    color: #333;
+}
+
+.popup p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 6.2.2 Clear CTA */
+.cta-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(to right, #007bff, #0056b3);
+}
+
+.cta-btn:hover {
+    opacity: 0.9;
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .cta-btn {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h2 style="text-align:center;margin-top:30px;">
+Popup Advertisement UI Microproject
+</h2>
+
+<div class="trigger-container">
+    <button class="trigger-btn" id="showPopupBtn">Show Offer</button>
+</div>
+
+<!-- POPUP STRUCTURE -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup" id="popupBox">
+        <button class="close-btn" id="closeBtn">&times;</button>
+        <h3 id="popupTitle"></h3>
+        <p id="popupMessage"></p>
+        <button class="cta-btn">Buy Now</button>
+    </div>
+</div>
+
+<script>
+(function () {
+
+"use strict";
+
+/* ===============================
+   CONSTRAINTS
+   - Client-side only
+   - No backend
+   - No tracking
+================================ */
+
+let popupOpened = false;
+
+const overlay = document.getElementById("popupOverlay");
+const closeBtn = document.getElementById("closeBtn");
+const showBtn = document.getElementById("showPopupBtn");
+const title = document.getElementById("popupTitle");
+const message = document.getElementById("popupMessage");
+
+/* EH-01: Popup container missing */
+if (!overlay) {
+    console.warn("Popup container missing.");
+    return;
+}
+
+/* ===============================
+   SECURITY (7.1 Input Safety)
+================================ */
+function sanitizeText(text) {
+    const temp = document.createElement("div");
+    temp.textContent = text;
+    return temp.textContent;
+}
+
+function setContent() {
+    title.textContent = sanitizeText("🎉 Mega Sale - 50% OFF!");
+    message.textContent = sanitizeText(
+        "Limited time offer! Get premium access at half price today."
+    );
+}
+
+/* ===============================
+   OPEN POPUP
+================================ */
+function openPopup() {
+    if (popupOpened) return; // TC-09 prevent multiple
+
+    popupOpened = true;
+    sessionStorage.setItem("popupShown", "true");
+
+    setContent();
+
+    overlay.style.display = "flex";
+    document.body.classList.add("popup-active");
+}
+
+/* ===============================
+   CLOSE POPUP
+================================ */
+function closePopup() {
+    if (!popupOpened) return; // EH-04 safe close
+
+    overlay.style.display = "none";
+    document.body.classList.remove("popup-active");
+    popupOpened = false;
+}
+
+/* ===============================
+   TRIGGERS (4.1)
+================================ */
+
+/* Page Load + Delay */
+window.addEventListener("load", function () {
+    setTimeout(function () {
+        if (!sessionStorage.getItem("popupShown")) {
+            openPopup();
+        }
+    }, 3000);
+});
+
+/* Button Click */
+if (showBtn) {
+    showBtn.addEventListener("click", openPopup);
+}
+
+/* Scroll Trigger */
+window.addEventListener("scroll", function () {
+    if (window.scrollY > 250 && !popupOpened) {
+        openPopup();
+    }
+});
+
+/* ===============================
+   CLOSE OPTIONS (4.4)
+================================ */
+
+if (closeBtn) {
+    closeBtn.addEventListener("click", closePopup);
+}
+
+overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) {
+        closePopup();
+    }
+});
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+        closePopup();
+    }
+});
+
+/* ===============================
+   UI INTEGRITY (7.2)
+================================ */
+const observer = new MutationObserver(function () {
+    if (!popupOpened && overlay.style.display === "flex") {
+        overlay.style.display = "none";
+    }
+});
+
+observer.observe(overlay, { attributes: true });
+
+})();
+</script>
+
+</body>
+</html>
